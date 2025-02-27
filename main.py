@@ -35,13 +35,17 @@ def search_tracks(request: TrackSearchRequest):
         # 取得した曲情報を整形して返す
         track_list = []
         for track in tracks:
+            album_images = track['album']['images']
+            album_image_url = album_images[0]['url'] if album_images else None  # 最も高解像度のジャケット画像
+
             track_list.append({
                 "track_name": track['name'],
                 "artist_name": ', '.join([artist['name'] for artist in track['artists']]),
                 "album": track['album']['name'],
                 "release_date": track['album']['release_date'],
                 "spotify_url": track['external_urls']['spotify'],
-                "preview_url": track.get('preview_url', None)
+                "preview_url": track.get('preview_url', None),
+                "album_image_url": album_image_url  # 追加
             })
 
         return {"tracks": track_list}
